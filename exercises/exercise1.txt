@@ -1,0 +1,111 @@
+irb(main):012:0> b=Brewery.new name:"BrewDog", year:2007
+=> #<Brewery:0x00007f140f04a9a0 id: nil, name: "BrewDog", year: 2007, created_at: nil, updated_at: nil>
+irb(main):013:0> b.save
+  TRANSACTION (0.1ms)  begin transaction
+  Brewery Create (0.3ms)  INSERT INTO "breweries" ("name", "year", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["name", "BrewDog"], ["year", 2007], ["created_at", "2023-09-05 11:51:46.103783"], ["updated_at", "2023-09-05 11:51:46.103783"]]
+  updated_at: Sun, 09 Jul 2023 13:10:35.352148000 UTC +00:00>,
+ #<Brewery:0x00007f140fc97fa0
+  id: 2,
+  name: "Malmgard",
+  year: 2001,
+  created_at: Sun, 09 Jul 2023 13:10:35.359487000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.359487000 UTC +00:00>,
+ #<Brewery:0x00007f140fc97e10
+  id: 3,
+  name: "Weihenstephaner",
+  year: 1040,
+  created_at: Sun, 09 Jul 2023 13:10:35.367263000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.367263000 UTC +00:00>,
+ #<Brewery:0x00007f140fc97d20
+  id: 5,
+  name: "BrewDog",
+  year: 2007,
+  created_at: Tue, 05 Sep 2023 11:51:46.103783000 UTC +00:00,
+  updated_at: Tue, 05 Sep 2023 11:51:46.103783000 UTC +00:00>]
+irb(main):015:0> reload!
+  name: "Malmgard",
+  year: 2001,
+  created_at: Sun, 09 Jul 2023 13:10:35.359487000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.359487000 UTC +00:00>,
+ #<Brewery:0x00007f1410b45430
+  id: 3,
+  name: "Weihenstephaner",
+  year: 1040,
+  updated_at: Tue, 05 Sep 2023 11:51:46.103783000 UTC +00:00>]
+irb(main):017:0> bd = Brewery.find_by name:"BrewDog"
+  Brewery Load (0.3ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."name" = ? LIMIT ?  [["name", "BrewDog"], ["LIMIT", 1]]
+=>
+#<Brewery:0x00007f140f1c4420
+...
+irb(main):018:0> b = Beer.create name:"Punk IPA", style:"IPA", brewery:bd.id
+/home/jesperku/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-7.0.6/lib/active_record/associations/association.rb:299:in `raise_on_type_mismatch!': Brewery(#311820) expected, got 5 which is an instance of Integer(#2200) (ActiveRecord::AssociationTypeMismatch)
+irb(main):019:0> b = Beer.create name:"Punk IPA", style:"IPA", brewery_id:bd.id
+  TRANSACTION (0.1ms)  begin transaction
+  Brewery Load (0.3ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."id" = ? LIMIT ?  [["id", 5], ["LIMIT", 1]]
+  Beer Create (0.3ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["name", "Punk IPA"], ["style", "IPA"], ["brewery_id", 5], ["created_at", "2023-09-05 11:57:29.834113"], ["updated_at", "2023-09-05 11:57:29.834113"]]
+  TRANSACTION (60.2ms)  commit transaction
+=>
+#<Beer:0x00007f140f11ba28
+...
+irb(main):020:0> Beer.create name:"Nanny State", style:"low alcohol", brewery_id:bd.id
+  TRANSACTION (0.1ms)  begin transaction
+  Brewery Load (0.2ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."id" = ? LIMIT ?  [["id", 5], ["LIMIT", 1]]
+  Beer Create (0.3ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["name", "Nanny State"], ["style", "low alcohol"], ["brewery_id", 5], ["created_at", "2023-09-05 11:58:15.389224"], ["updated_at", "2023-09-05 11:58:15.389224"]]
+  TRANSACTION (59.8ms)  commit transaction
+=>
+#<Beer:0x00007f140f0b1628
+ id: 15,
+ name: "Nanny State",
+ style: "low alcohol",
+ brewery_id: 5,
+ created_at: Tue, 05 Sep 2023 11:58:15.389224000 UTC +00:00,
+ updated_at: Tue, 05 Sep 2023 11:58:15.389224000 UTC +00:00>
+
+irb(main):023:0> b= Beer.find_by name:"Punk IPA"
+  Beer Load (0.2ms)  SELECT "beers".* FROM "beers" WHERE "beers"."name" = ? LIMIT ?  [["name", "Punk IPA"], ["LIMIT", 1]]
+=>
+#<Beer:0x00007f1411360868
+...
+irb(main):024:0> b.rating.create score: 5
+/home/jesperku/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/activemodel-7.0.6/lib/active_model/attribute_methods.rb:45 beer_id: 14,
+ created_at: Tue, 05 Sep 2023 12:03:27.089923000 UTC +00:00,
+ updated_at: Tue, 05 Sep 2023 12:03:27.089923000 UTC +00:00>
+irb(main):026:0> b.ratings.create score: 22
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (0.3ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["]
+  TRANSACTION (63.2ms)  commit transaction
+=>
+#<Rating:0x00007f140f261ea0
+ id: 5,
+ score: 22,
+ beer_id: 14,
+ created_at: Tue, 05 Sep 2023 12:03:35.604160000 UTC +00:00,
+ updated_at: Tue, 05 Sep 2023 12:03:35.604160000 UTC +00:00>
+irb(main):027:0> b= Beer.find_by name:"Nanny State"
+  Beer Load (0.2ms)  SELECT "beers".* FROM "beers" WHERE "beers"."name" = ? LIMIT ?  [["name", "Nanny State"], ["LIMIT", 1]]
+=>
+#<Beer:0x00007f140f1a70a0
+...
+irb(main):028:0> b.ratings.create score:33
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (0.3ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 33], ["beer_id", 15], ["created_at", "2023-09-05 12:04:35.439589"], ["updated_at", "2023-09-05 12:04:35.439589"]]
+  TRANSACTION (65.6ms)  commit transaction
+=>
+#<Rating:0x00007f140f1c0690
+ id: 6,
+ score: 33,
+ beer_id: 15,
+ created_at: Tue, 05 Sep 2023 12:04:35.439589000 UTC +00:00,
+ updated_at: Tue, 05 Sep 2023 12:04:35.439589000 UTC +00:00>
+irb(main):029:0> b.ratings.create score:13
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (0.3ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 13], ["beer_id", 15], ["created_at", "2023-09-05 12:04:40.046784"], ["updated_at", "2023-09-05 12:04:40.046784"]]
+  TRANSACTION (60.9ms)  commit transaction
+=>
+#<Rating:0x00007f140f0f28f8
+ id: 7,
+ score: 13,
+ beer_id: 15,
+ created_at: Tue, 05 Sep 2023 12:04:40.046784000 UTC +00:00,
+ updated_at: Tue, 05 Sep 2023 12:04:40.046784000 UTC +00:00>
+irb(main):030:0>
