@@ -1,9 +1,16 @@
 <h2>List of ratings</h2>
 
 <ul>
-    <% @ratings.each do |rating| %>
-        <li> <%= rating %> </li>
-    <% end %>
+  <% @ratings.each do |rating| %>
+    <li>
+      <%= rating.beer.name %>
+      <%= rating.score %>
+    </li>
+  <% end %>
 </ul>
 
 <p>Number of ratings: <%= @ratings.count %></p>
+
+<div id="ratings">
+  
+</div>
