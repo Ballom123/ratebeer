@@ -15,4 +15,8 @@ class Beer < ApplicationRecord
         return sum
     end
 
+    def to_s 
+        return "#{self.name} #{self.brewery.name}"
+    end
+
 end
