@@ -1,0 +1,91 @@
+irb(main):001:0> Beer.all
+  Beer Load (0.3ms)  SELECT "beers".* FROM "beers"
+=>
+[#<Beer:0x00007fb46882efa0
+  id: 1,
+  name: "Iso 3",
+  style: "Lager",
+  brewery_id: 1,
+  created_at: Sun, 09 Jul 2023 13:10:35.390777000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.390777000 UTC +00:00>,
+ #<Beer:0x00007fb46859de58
+  id: 2,
+  name: "Karhu",
+  style: "Lager",
+  brewery_id: 1,
+  created_at: Sun, 09 Jul 2023 13:10:35.399586000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.399586000 UTC +00:00>,
+ #<Beer:0x00007fb46859dd40
+  id: 3,
+  name: "Tuplahumala",
+  style: "Lager",
+  brewery_id: 1,
+  created_at: Sun, 09 Jul 2023 13:10:35.407882000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.407882000 UTC +00:00>,
+ #<Beer:0x00007fb46859dc28
+  id: 4,
+  name: "Huvila Pale Ale",
+  style: "Pale Ale",
+  brewery_id: 2,
+  created_at: Sun, 09 Jul 2023 13:10:35.417693000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.417693000 UTC +00:00>,
+ #<Beer:0x00007fb46859d9f8
+  id: 5,
+  name: "X Porter",
+  style: "Porter",
+  brewery_id: 2,
+  created_at: Sun, 09 Jul 2023 13:10:35.426926000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.426926000 UTC +00:00>,
+ #<Beer:0x00007fb46859d818
+  id: 6,
+  name: "Hefeweizen",
+  style: "Weizen",
+  brewery_id: 3,
+  created_at: Sun, 09 Jul 2023 13:10:35.436182000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.436182000 UTC +00:00>,
+ #<Beer:0x00007fb46859d0c0
+  id: 7,
+  name: "Helles",
+  style: "Lager",
+  brewery_id: 3,
+  created_at: Sun, 09 Jul 2023 13:10:35.444082000 UTC +00:00,
+  updated_at: Sun, 09 Jul 2023 13:10:35.444082000 UTC +00:00>,
+ #<Beer:0x00007fb46859cfd0
+  id: 8,
+  name: "Lite",
+  style: "Lager",
+  brewery_id: 1,
+  created_at: Sun, 09 Jul 2023 13:21:24.895445000 UTC +00:00,
+  name: "Punk IPA",
+  style: "IPA",
+  brewery_id: 5,
+  created_at: Tue, 05 Sep 2023 11:57:29.834113000 UTC +00:00,
+  updated_at: Tue, 05 Sep 2023 11:57:29.834113000 UTC +00:00>,
+ #<Beer:0x00007fb46859c800
+  id: 15,
+  name: "Nanny State",
+  style: "low alcohol",
+  brewery_id: 5,
+  created_at: Tue, 05 Sep 2023 11:58:15.389224000 UTC +00:00,
+  updated_at: Tue, 05 Sep 2023 11:58:15.389224000 UTC +00:00>]
+irb(main):002:0> b = Beer.find 7
+  Beer Load (0.3ms)  SELECT "beers".* FROM "beers" WHERE "beers"."id" = ? LIMIT ?  [["id", 7], ["LIMIT", 1]]
+=>
+#<Beer:0x00007fb468634510
+...
+irb(main):003:0> Rating.create score:14 beer_id:7
+/home/jesperku/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/irb-1.7.1/lib/irb/workspace.rb:113:in `eval': (irb):3: syntax error, unexpected local variable or method, expecting end-of-input (SyntaxError)
+Rating.create score:14 beer_id:7
+                       ^~~~~~~
+irb(main):004:0> b.ratings.create score:14
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (0.3ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 14], ["beer_id", 7], ["created_at", "2023-09-15 06:17:24.868728"], ["updated_at", "2023-09-15 06:17:24.868728"]]
+  TRANSACTION (4.9ms)  commit transaction
+=>
+#<Rating:0x00007fb468828b50
+ id: 8,
+ score: 14,
+ beer_id: 7,
+ created_at: Fri, 15 Sep 2023 06:17:24.868728000 UTC +00:00,
+ updated_at: Fri, 15 Sep 2023 06:17:24.868728000 UTC +00:00>
+irb(main):005:0>
