@@ -1,10 +1,8 @@
 module RatingAverage
-    extend ActiveSupport::Concern
+  extend ActiveSupport::Concern
 
-    def average_rating
-        array = self.ratings.all
-        return (array.average(:score)).to_f
-    end
-
-
+  def average_rating
+    array = ratings.all
+    array.average(:score).to_f
+  end
 end
