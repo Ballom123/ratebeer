@@ -5,7 +5,7 @@
     <li>
       <%= rating.beer.name %>
       <%= rating.score %>
-      <%= button_to 'delete', rating, method: :delete, form: { data: {turbo_confirm: "Are you sure?"} } %>
+      <%= link_to rating.user.username, rating.user %>
     </li>
   <% end %>
 </ul>
