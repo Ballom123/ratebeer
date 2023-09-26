@@ -14,4 +14,8 @@ class Brewery < ApplicationRecord
       errors.add(:year, "can't be in the future")
     end
   end
+
+  def to_s
+    "#{name}"
+  end
 end
