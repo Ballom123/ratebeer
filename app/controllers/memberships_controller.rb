@@ -13,7 +13,8 @@ class MembershipsController < ApplicationController
   # GET /memberships/new
   def new
     @membership = Membership.new
-    @beer_clubs = BeerClub.all
+    @ids = current_user.beer_clubs.pluck(:id)
+    @beer_clubs = BeerClub.where.not(id: @ids)
   end
 
   # GET /memberships/1/edit
