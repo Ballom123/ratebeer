@@ -82,3 +82,6 @@ end
 group :production do
    gem 'pg'
 end
+
+# Password digest stuff
+gem 'bcrypt', '~> 3.1.7'
