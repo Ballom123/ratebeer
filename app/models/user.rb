@@ -9,9 +9,9 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 4 }
   validate :password_requirements
 
-  has_many :ratings
+  has_many :ratings, dependent: :destroy
   has_many :beers, through: :ratings
-  has_many :memberships
+  has_many :memberships, dependent: :destroy
   has_many :beer_clubs, through: :memberships
 
   def password_requirements
