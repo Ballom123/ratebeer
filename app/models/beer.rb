@@ -3,6 +3,7 @@ class Beer < ApplicationRecord
   include RatingAverage
 
   validates :name, length: { minimum: 1 }
+  validates :style, :presence => true
 
   belongs_to :brewery
   has_many :ratings, dependent: :destroy
