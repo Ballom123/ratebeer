@@ -85,3 +85,8 @@ end
 
 # Password digest stuff
 gem 'bcrypt', '~> 3.1.7'
+
+group :test do
+  # Testing system rspec
+  gem "rspec-rails", "~> 6.0.0"
+end

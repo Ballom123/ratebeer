@@ -1,5 +1,6 @@
 class MembershipsController < ApplicationController
   before_action :set_membership, only: %i[show edit update destroy]
+  before_action :set_beer_clubs, only: %i[new edit create]
 
   # GET /memberships or /memberships.json
   def index
@@ -13,8 +14,6 @@ class MembershipsController < ApplicationController
   # GET /memberships/new
   def new
     @membership = Membership.new
-    @ids = current_user.beer_clubs.pluck(:id)
-    @beer_clubs = BeerClub.where.not(id: @ids)
   end
 
   # GET /memberships/1/edit
@@ -24,13 +23,16 @@ class MembershipsController < ApplicationController
   # POST /memberships or /memberships.json
   def create
     @membership = Membership.new(membership_params)
-    @membership.user_id = current_user.id
+    @membership.user = current_user
 
-    if @membership.save
-      redirect_to user_path current_user
-    else
-      @beer_clubs = BeerClub.all
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @membership.save
+        format.html { redirect_to membership_url(@membership), notice: "Membership was successfully created." }
+        format.json { render :show, status: :created, location: @membership }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @membership.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -64,8 +66,13 @@ class MembershipsController < ApplicationController
     @membership = Membership.find(params[:id])
   end
 
+  def set_beer_clubs
+    memberships_of_current = current_user.memberships.map(&:beer_club)
+    @beer_clubs = BeerClub.where.not(id: memberships_of_current)
+  end
+
   # Only allow a list of trusted parameters through.
   def membership_params
-    params.require(:membership).permit(:beer_club_id, :user_id)
+    params.require(:membership).permit(:beer_club_id)
   end
 end
