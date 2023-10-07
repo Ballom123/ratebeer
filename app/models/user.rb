@@ -32,15 +32,32 @@ class User < ApplicationRecord
     style_groups = ratings.group_by{ |ratings| ratings.beer.style }
     styles_with_averages = {}
     style_groups.each do |style, ratings|
-      styles_with_averages.merge!(style_average(style, ratings))
+      styles_with_averages.merge!(rating_average(style, ratings))
     end
     styles_with_averages.max_by{ |_k, v| v }
   end
 
-  def style_average(style, ratings)
+  def favorite_brewery
+    return nil if ratings.empty?
+
+    breweries = group_ratings_by_brewery
+    breweries.first
+  end
+
+  def group_ratings_by_brewery
+    brewery_groups = ratings.group_by{ |ratings| ratings.beer.brewery }
+    breweries_with_averages = {}
+    brewery_groups.each do |brewery, ratings|
+      breweries_with_averages.merge!(rating_average(brewery, ratings))
+    end
+    breweries_with_averages.max_by{ |_k, v| v }
+  end
+
+  def rating_average(arg1, ratings)
+    # Shared method for averages
     count = ratings.count
     sum = ratings.sum(&:score)
     avg = (sum / count).to_f
-    { style => avg }
+    { arg1 => avg }
   end
 end
