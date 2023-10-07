@@ -17,6 +17,7 @@ class User < ApplicationRecord
 
   def favorite_beer
     return nil if ratings.empty?
+
     ratings.order(score: :desc).limit(1).first.beer
   end
 
@@ -28,22 +29,18 @@ class User < ApplicationRecord
   end
 
   def group_ratings_by_style
-    style_groups = ratings.group_by{ |ratings| ratings.beer.style}
+    style_groups = ratings.group_by{ |ratings| ratings.beer.style }
     styles_with_averages = {}
     style_groups.each do |style, ratings|
       styles_with_averages.merge!(style_average(style, ratings))
     end
-    return styles_with_averages.max_by{ | k, v| v }
+    styles_with_averages.max_by{ |_k, v| v }
   end
 
   def style_average(style, ratings)
-    count = 0
-    sum = 0
-    ratings.each do |rating| 
-      sum += rating.score
-      count += 1
-    end
-    avg = (sum/count).to_f
-    return {style => avg}
+    count = ratings.count
+    sum = ratings.sum(&:score)
+    avg = (sum / count).to_f
+    { style => avg }
   end
 end
