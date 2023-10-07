@@ -23,22 +23,27 @@ class User < ApplicationRecord
   def favorite_style
     return nil if ratings.empty?
 
-    style_groups = ratings.group_by{ |ratings| ratings.beer.style }
-    best_avg = 0
-    best_style = ""
+    styles = group_ratings_by_style
+    styles.first
+  end
+
+  def group_ratings_by_style
+    style_groups = ratings.group_by{ |ratings| ratings.beer.style}
+    styles_with_averages = {}
     style_groups.each do |style, ratings|
-      sum = 0
-      count = 0
-      ratings.each do |rating|
-        sum += rating[:score]
-        count += 1
-      end
-      avg = (sum/count).to_f
-      if avg > best_avg
-        best_avg = avg 
-        best_style = style
-      end
+      styles_with_averages.merge!(style_average(style, ratings))
     end
-    best_style
+    return styles_with_averages.max_by{ | k, v| v }
+  end
+
+  def style_average(style, ratings)
+    count = 0
+    sum = 0
+    ratings.each do |rating| 
+      sum += rating.score
+      count += 1
+    end
+    avg = (sum/count).to_f
+    return {style => avg}
   end
 end
