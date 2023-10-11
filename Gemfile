@@ -65,10 +65,13 @@ group :development do
 end
 
 group :test do
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  # Testing system rspec
+  gem 'rspec-rails', '~> 6.0.0.rc1'
+  gem 'factory_bot_rails'
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem 'launchy'
 end
 
 group :development, :test do
@@ -85,13 +88,3 @@ end
 
 # Password digest stuff
 gem 'bcrypt', '~> 3.1.7'
-
-group :test do
-  # Testing system rspec
-  gem "rspec-rails", "~> 6.0.0"
-end
-
-group :test do
-  # Test envirnoments and fixtures
-  gem "factory_bot_rails"
-end

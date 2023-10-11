@@ -1,13 +1,6 @@
 <h1>Editing beer</h1>
 
-<%= form_for(@beer) do |f| %>
-
-  name: <%= f.text_field :name %>
-  <%= f.select :style, options_for_select(@styles) %>
-  <%= f.select :brewery_id, options_from_collection_for_select(@breweries, :id, :name) %>
-  
-  <%= f.submit "Update Beer" %>
-<% end %>
+<%= render "form", beer: @beer %>
 
 <div>
   <%= link_to "Show this beer", @beer %> |
