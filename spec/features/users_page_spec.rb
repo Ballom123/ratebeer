@@ -52,5 +52,6 @@ describe "User" do
     expect(page).to have_content(@user1.ratings.first.to_s)
     expect(page).to have_content(@user1.ratings.last.to_s)
     expect(page).to have_content("2 ratings")
+    expect(page).not_to have_content(user2.ratings.first.to_s)
   end
 end
