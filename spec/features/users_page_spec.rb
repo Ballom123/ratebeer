@@ -4,7 +4,7 @@ include Helpers
 
 describe "User" do
   before :each do
-    FactoryBot.create :user
+    @user1 = FactoryBot.create :user
   end
 
   describe "who has signed up" do
@@ -32,5 +32,25 @@ describe "User" do
     expect{
       click_button('Create User')
     }.to change{User.count}.by(1)
+  end
+
+  it "shows user's own ratings correctly" do
+    # Create another user to test additional ratings do not show
+    user2 = FactoryBot.create(:user, username: "Paavo")
+
+    # Login
+    sign_in(username: "Pekka", password: "Foobar1")
+
+    # Create ratings, probs want to helper this
+    create_beer_with_rating({user: @user1}, 20)
+    create_beer_with_rating({user: @user1}, 10)
+    # Extra beer not to be expected on user page
+    create_beer_with_rating({user: user2}, 30)
+
+    visit user_path(@user1)
+
+    expect(page).to have_content(@user1.ratings.first.to_s)
+    expect(page).to have_content(@user1.ratings.last.to_s)
+    expect(page).not_to have_content(user2.ratings.first.to_s)
   end
 end
