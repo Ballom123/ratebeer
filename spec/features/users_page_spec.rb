@@ -74,4 +74,18 @@ describe "User" do
 
     expect(page).to have_content("Favorite style: Lager")
   end
+
+  it "can delete own ratings from database properly" do
+    create_beer_with_rating({user: @user1}, 20)
+    create_beer_with_rating({user: @user1}, 40)
+    
+    # Go to page and delete second rating
+    sign_in(username: "Pekka", password: "Foobar1")
+    visit user_path(@user1)
+    find(:xpath, "(//a[text()='Delete'])[2]").click
+
+    expect(@user1.ratings.count).to eq(1)
+    expect(page).to have_content(@user1.ratings.first.to_s)
+    expect(page).not_to have_content("anonymous 40")
+  end
 end
