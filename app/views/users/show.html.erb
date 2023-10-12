@@ -4,6 +4,8 @@
   <h2>Username:</h2>
   <p><%= @user.username %></p>
   <p>Has made <%= pluralize(@user.ratings.size, "rating") %>, average rating <%= @user.average_rating %> </p>
+  <p>Favorite style: <%= @user.favorite_style %></p>
+  <p>Favorite brewery: <%= @user.favorite_brewery %></p>
 </div>
 
 <div>

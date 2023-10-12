@@ -52,6 +52,26 @@ describe "User" do
     expect(page).to have_content(@user1.ratings.first.to_s)
     expect(page).to have_content(@user1.ratings.last.to_s)
     expect(page).to have_content("2 ratings")
-    expect(page).not_to have_content(user2.ratings.first.to_s)
+    expect(page.body).not_to have_content(user2.ratings.first.to_s)
+  end
+
+  it "shows their favorite brewery" do
+    create_beer_with_rating({user: @user1}, 20)
+
+    # Login, go to page
+    sign_in(username: "Pekka", password: "Foobar1")
+    visit user_path(@user1)
+
+    expect(page).to have_content("Favorite brewery: anonymous")
+  end
+
+  it "shows their favorite style" do
+    create_beer_with_rating({user: @user1}, 20)
+
+    # Login, go to page
+    sign_in(username: "Pekka", password: "Foobar1")
+    visit user_path(@user1)
+
+    expect(page).to have_content("Favorite style: Lager")
   end
 end
