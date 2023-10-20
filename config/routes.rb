@@ -22,4 +22,6 @@ Rails.application.routes.draw do
   get "memberships", to: "memberships#index"
   get "memberships/new", to: "memberships#new"
   post "memberships", to: "memberships#create"
+  get "places", to: "places#index"
+  post "places", to: "places#search"
 end
