@@ -2,7 +2,7 @@ class Beer < ApplicationRecord
   include Enumerable
   include RatingAverage
 
-  validates :name, length: { minimum: 1, :message => "can't be blank"}
+  validates :name, length: { minimum: 1, message: "can't be blank" }
   validates :style, presence: true
 
   belongs_to :brewery
