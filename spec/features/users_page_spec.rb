@@ -4,7 +4,7 @@ include Helpers
 
 describe "User" do
   before :each do
-    @user1 = FactoryBot.create :user
+    FactoryBot.create :user
   end
 
   describe "who has signed up" do
@@ -16,76 +16,53 @@ describe "User" do
     end
 
     it "is redirected back to signin form if wrong credentials given" do
+      visit signin_path
       sign_in(username: "Pekka", password: "wrong")
 
       expect(current_path).to eq(signin_path)
       expect(page).to have_content 'Username and/or password mismatch'
+    end    
+
+    it "when signed up with good credentials, is added to the system" do
+      visit signup_path
+      fill_in('user_username', with: 'Brian')
+      fill_in('user_password', with: 'Secret55')
+      fill_in('user_password_confirmation', with: 'Secret55')
+    
+      expect{
+        click_button('Create User')
+      }.to change{User.count}.by(1)
     end
   end
 
-  it "when signed up with good credentials, is added to the system" do
-    visit signup_path
-    fill_in('user_username', with: 'Brian')
-    fill_in('user_password', with: 'Secret55')
-    fill_in('user_password_confirmation', with: 'Secret55')
+  describe "when multiple ratings" do
+    before :each do
+      @user = User.first
+      create_beers_with_many_ratings({ user: @user, style: "Lager" }, 12, 19, 14)
+    end
 
-    expect{
-      click_button('Create User')
-    }.to change{User.count}.by(1)
-  end
+    it "those are listed in user page" do
+      visit user_path(@user)
+      expect(page).to have_content 'Has made 3 ratings, average rating 15'
+      expect(page).to have_content 'Favorite brewery: anonymous'
+      expect(page).to have_content 'Favorite style: Lager'
+      expect(page).to have_content 'anonymous 12'
+      expect(page).to have_content 'anonymous 19'
+      expect(page).to have_content 'anonymous 14'
+    end
 
-  it "shows user's own ratings correctly" do
-    # Create another user to test additional ratings do not show
-    user2 = FactoryBot.create(:user, username: "Paavo")
-
-    # Login
-    sign_in(username: "Pekka", password: "Foobar1")
-
-    # Create ratings, probs want to helper this
-    create_beer_with_rating({user: @user1}, 20)
-    create_beer_with_rating({user: @user1}, 10)
-    # Extra beer not to be expected on user page
-    create_beer_with_rating({user: user2}, 30)
-
-    visit user_path(@user1)
-
-    expect(page).to have_content(@user1.ratings.first.to_s)
-    expect(page).to have_content(@user1.ratings.last.to_s)
-    expect(page).to have_content("2 ratings")
-    expect(page.body).not_to have_content(user2.ratings.first.to_s)
-  end
-
-  it "shows their favorite brewery" do
-    create_beer_with_rating({user: @user1}, 20)
-
-    # Login, go to page
-    sign_in(username: "Pekka", password: "Foobar1")
-    visit user_path(@user1)
-
-    expect(page).to have_content("Favorite brewery: anonymous")
-  end
-
-  it "shows their favorite style" do
-    create_beer_with_rating({user: @user1}, 20)
-
-    # Login, go to page
-    sign_in(username: "Pekka", password: "Foobar1")
-    visit user_path(@user1)
-
-    expect(page).to have_content("Favorite style: Lager")
-  end
-
-  it "can delete own ratings from database properly" do
-    create_beer_with_rating({user: @user1}, 20)
-    create_beer_with_rating({user: @user1}, 40)
+    describe "when signed in" do
+      before :each do
+        @user = User.first
+        create_beers_with_many_ratings({ user: @user, style: "Lager" }, 12, 19, 14)
+        sign_in(username: "Pekka", password: "Foobar1")
+      end
     
-    # Go to page and delete second rating
-    sign_in(username: "Pekka", password: "Foobar1")
-    visit user_path(@user1)
-    find(:xpath, "(//a[text()='Delete'])[2]").click
-
-    expect(@user1.ratings.count).to eq(1)
-    expect(page).to have_content(@user1.ratings.first.to_s)
-    expect(page).not_to have_content("anonymous 40")
-  end
+      it "ratings can be deleted" do
+        expect{
+          page.first(:button, "Delete").click
+        }.to change{Rating.count}.by(-1)
+      end
+    end    
+  end  
 end

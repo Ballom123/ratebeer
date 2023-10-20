@@ -2,34 +2,34 @@ require 'rails_helper'
 
 include Helpers
 
-describe "adding through new_beer_path" do
-  let!(:brewery) { FactoryBot.create :brewery, name: "Koff" }
-  let!(:user) { FactoryBot.create :user }
-
-  before :each do
+describe "Beers" do
+  before :each do 
+    FactoryBot.create(:brewery, name: "Schlenkerla", year: 1678)
+    FactoryBot.create :user
     sign_in(username: "Pekka", password: "Foobar1")
   end
 
-  it "works with valid name" do
+  it "can be created with valid input" do
     visit new_beer_path
-    fill_in("beer_name", with: "Test1")
-    select("Lager", from: "beer[style]")
-    select("Koff", from: "beer[brewery_id]")
-
+    fill_in('beer[name]', with: 'Helles')
+    select('Lager', from: 'beer[style]')
+    select('Schlenkerla', from: 'beer[brewery_id]')
+  
     expect{
-      click_button "Create Beer"
-    }.to change{Beer.count}.from(0).to(1)
-    expect(current_path).to eq(beers_path)
+      click_button('Create Beer')
+    }.to change{Beer.count}.by(1)
   end
+  
 
-  it "does not save beer with empty name" do
+  it "can not be created with without a name" do
     visit new_beer_path
-    fill_in("beer_name", with: "")
-    select("Lager", from: "beer[style]")
-    select("Koff", from: "beer[brewery_id]")
-    click_button("Create Beer")
+    select('Lager', from: 'beer[style]')
+    select('Schlenkerla', from: 'beer[brewery_id]')
+  
+    expect{
+      click_button('Create Beer')
+    }.to change{Beer.count}.by(0)
 
-    expect(page).to have_content 'Name is too short (minimum is 1 character)'
-    expect(Beer.count).to eq(0)
-  end  
+    expect(page).to have_content "Name can't be blank"
+  end
 end

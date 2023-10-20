@@ -5,12 +5,11 @@ describe "Breweries page" do
     visit breweries_path
     expect(page).to have_content 'Breweries'
     expect(page).to have_content 'Number of breweries: 0'
-
   end
-
+  
   describe "when breweries exists" do
     before :each do
-      # So that the variable is visible inside the it block, the name must start with @ 
+      # jotta muuttuja näkyisi it-lohkoissa, tulee sen nimen alkaa @-merkillä
       @breweries = ["Koff", "Karjala", "Schlenkerla"]
       year = 1896
       @breweries.each do |brewery_name|
