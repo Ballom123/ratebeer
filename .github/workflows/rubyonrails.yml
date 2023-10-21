@@ -22,6 +22,7 @@ jobs:
           POSTGRES_DB: rails_test
           POSTGRES_USER: rails
           POSTGRES_PASSWORD: password
+          BEERMAPPING_APIKEY: ${{ secrets.BEERMAPPING_APIKEY }}
     env:
       RAILS_ENV: test
       DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
@@ -35,8 +36,6 @@ jobs:
           bundler-cache: true
       - name: Run tests
         run: bundle exec rspec
-        env:
-          BEERMAPPING_APIKEY: ${{ secrets.BEERMAPPING_APIKEY }}
   lint:
    runs-on: ubuntu-22.04
    steps:
