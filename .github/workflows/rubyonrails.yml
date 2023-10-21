@@ -4,9 +4,6 @@
 #
 # This workflow will install a prebuilt Ruby version, install dependencies, and
 # run tests and linters.
-env:
-  env_var: ${{ vars.BEERMAPPING_APIKEY }}
-
 name: "Ruby on Rails CI"
 on:
   push:
@@ -32,6 +29,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       # Add or replace dependency steps here
+      - name: API expo
+        run: ${{ secrets.BEERMAPPING_APIKEY }}
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
