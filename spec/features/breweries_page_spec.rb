@@ -1,5 +1,7 @@
 require 'rails_helper'
 
+include Helpers
+
 describe "Breweries page" do
   it "should not have any before been created" do
     visit breweries_path

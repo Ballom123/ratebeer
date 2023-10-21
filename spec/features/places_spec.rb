@@ -1,5 +1,7 @@
 require 'rails_helper'
 
+include Helpers
+
 describe "Places" do
   it "if one is returned by the API, it is shown at the page" do
     allow(BeermappingApi).to receive(:places_in).with("kumpula").and_return(
