@@ -29,14 +29,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       # Add or replace dependency steps here
-      - name: API expo
-        run: ${{ secrets.BEERMAPPING_APIKEY }}
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
       - name: Run tests
         run: bundle exec rspec
+        env:
+          BEERMAPPING_APIKEY: ${{ secrets.BEERMAPPING_APIKEY }}
   lint:
    runs-on: ubuntu-22.04
    steps:
