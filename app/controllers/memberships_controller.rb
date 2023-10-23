@@ -51,10 +51,12 @@ class MembershipsController < ApplicationController
 
   # DELETE /memberships/1 or /memberships/1.json
   def destroy
+    bc_id = @membership.beer_club_id
+    @beer_club = BeerClub.where(id: bc_id).first
     @membership.destroy
 
     respond_to do |format|
-      format.html { redirect_to memberships_url, notice: "Membership was successfully destroyed." }
+      format.html { redirect_to user_url(current_user), notice: "Membership at #{@beer_club.name} ended." }
       format.json { head :no_content }
     end
   end

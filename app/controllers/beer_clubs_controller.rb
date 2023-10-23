@@ -1,6 +1,7 @@
 class BeerClubsController < ApplicationController
   before_action :set_beer_club, only: %i[show edit update destroy]
   before_action :ensure_that_signed_in, except: [:index, :show]
+  before_action :set_membership, only: %i[show]
 
   # GET /beer_clubs or /beer_clubs.json
   def index
@@ -9,7 +10,7 @@ class BeerClubsController < ApplicationController
 
   # GET /beer_clubs/1 or /beer_clubs/1.json
   def show
-    @membership = Membership.new
+    @membership
   end
 
   # GET /beer_clubs/new
@@ -64,6 +65,14 @@ class BeerClubsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_beer_club
     @beer_club = BeerClub.find(params[:id])
+  end
+
+  def set_membership
+    if @beer_club.members.include?(current_user) == false
+      @membership = Membership.new
+    else
+      @membership = Membership.where(user_id: current_user.id, beer_club_id: @beer_club.id).first
+    end
   end
 
   # Only allow a list of trusted parameters through.

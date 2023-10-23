@@ -23,6 +23,17 @@
     <% end %>
   </div>
 <% end %>
+
+<% if current_user and @beer_club.members.include?(current_user) %>
+  <div>
+    <%= form_with(model: @membership, method: :delete) do |form| %>
+    <%= form.hidden_field :beer_club_id, value: @beer_club.id %>
+    <%= form.hidden_field :user_id, value: current_user.id %>
+    <%= form.submit "End the membership" %>
+  <% end %>
+  </div>
+<% end %>
+
 <div>
   <%= link_to('Edit this beer club', edit_beer_club_path) if current_user %> |
   <%= link_to "Back to beer clubs", beer_clubs_path %>
