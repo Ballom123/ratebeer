@@ -4,7 +4,7 @@ SimpleCov.start('rails')
 require 'spec_helper'
 require 'webmock/rspec'
 ENV['RAILS_ENV'] ||= 'test'
-require_relative '../config/environment/'
+require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'

@@ -68,11 +68,11 @@ class BeerClubsController < ApplicationController
   end
 
   def set_membership
-    if @beer_club.members.include?(current_user) == false
-      @membership = Membership.new
-    else
-      @membership = Membership.where(user_id: current_user.id, beer_club_id: @beer_club.id).first
-    end
+    @membership = if @beer_club.members.include?(current_user) == false
+                    Membership.new
+                  else
+                    Membership.where(user_id: current_user.id, beer_club_id: @beer_club.id).first
+                  end
   end
 
   # Only allow a list of trusted parameters through.
