@@ -1,2 +1,23 @@
 <div id="<%= dom_id style %>">
+
+  <h2>
+    <%= style.name %>
+  </h2>
+
+  <p>
+    <em>Description: </em><%= style.description %>
+  </p>
+
+  <div>
+    <h3>Beers:</h3>
+        <ul>
+        <% style.beers.each do |beer| %>
+            <li>
+            <%= beer.name %>
+            </li>
+        <% end %>
+        </ul>
+    </div>
+
+
 </div>
