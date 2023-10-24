@@ -3,7 +3,7 @@ class Beer < ApplicationRecord
   include RatingAverage
 
   validates :name, length: { minimum: 1, message: "can't be blank" }
-  validates :style, presence: true
+  validates :style_id, presence: true
 
   belongs_to :style
   belongs_to :brewery

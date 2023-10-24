@@ -25,7 +25,7 @@ class User < ApplicationRecord
     return nil if ratings.empty?
 
     styles = group_ratings_by_style
-    styles.first
+    styles.first.name
   end
 
   def group_ratings_by_style

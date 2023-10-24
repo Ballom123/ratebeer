@@ -12,7 +12,7 @@ FactoryBot.define do
 
   factory :beer do
     name { "anonymous" }
-    style { "Lager" }
+    style # style associated with beer
     brewery # the brewery associated with beer is created with brewery factory
   end
 
@@ -20,5 +20,10 @@ FactoryBot.define do
     score { 10 }
     beer # The beer associated with rating is created with beer factory
     user # The user associated with rating is created with user factory
+  end
+
+  factory :style do
+    name { "tyyli" }
+    description { "Lorem ipsum" }
   end
 end
