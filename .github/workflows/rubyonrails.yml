@@ -23,10 +23,12 @@ jobs:
           POSTGRES_USER: rails
           POSTGRES_PASSWORD: password
           BEERMAPPING_APIKEY: ${{ secrets.BEERMAPPING_APIKEY }}
+          WEATHER_APIKEY: ${{ secrets.WEATHER_APIKEY }}
     env:
       RAILS_ENV: test
       DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
       BEERMAPPING_APIKEY: ${{ secrets.BEERMAPPING_APIKEY }}
+      WEATHER_APIKEY: ${{ secrets.WEATHER_APIKEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
