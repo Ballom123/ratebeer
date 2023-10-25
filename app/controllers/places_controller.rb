@@ -11,6 +11,13 @@ class PlacesController < ApplicationController
   end
 
   def search
+    # Weather search
+    @weather = WeatherApi.current_weather(params[:city])
+    if @weather.empty?
+      redirect_to places_path, notice: "No such location exists!"
+    end
+
+    # Bars search
     @places = BeermappingApi.places_in(params[:city])
     session[:city] = params[:city]
     if @places.empty?
