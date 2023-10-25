@@ -38,17 +38,18 @@ describe "User" do
   describe "when multiple ratings" do
     before :each do
       @user = User.first
-      create_beers_with_many_ratings({ user: @user, style: "Lager" }, 12, 19, 14)
+      style = FactoryBot.create(:style, name:"Lager")
+      create_beers_with_many_ratings({ user: @user, style: style }, 12, 19, 14)
     end
 
     it "those are listed in user page" do
       visit user_path(@user)
-      expect(page).to have_content 'Has made 3 ratings with an average of 15'
-      expect(page).to have_content 'Favorite brewery anonymous'
-      expect(page).to have_content 'Favorite style Lager'
-      expect(page).to have_content '12 anonymous'
-      expect(page).to have_content '19 anonymous'
-      expect(page).to have_content '14 anonymous'
+      expect(page).to have_content 'Has made 3 ratings, average rating 15'
+      expect(page).to have_content 'Favorite brewery: anonymous'
+      expect(page).to have_content 'Favorite style: Lager'
+      expect(page).to have_content 'anonymous 12'
+      expect(page).to have_content 'anonymous 19'
+      expect(page).to have_content 'anonymous 14'
     end
 
     describe "when signed in" do
@@ -58,7 +59,7 @@ describe "User" do
     
       it "ratings can be deleted" do
         expect{
-          page.first(:button, "delete").click
+          page.first(:button, "Delete").click
         }.to change{Rating.count}.by(-1)
       end
     end    
