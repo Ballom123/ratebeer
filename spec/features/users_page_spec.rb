@@ -43,24 +43,22 @@ describe "User" do
 
     it "those are listed in user page" do
       visit user_path(@user)
-      expect(page).to have_content 'Has made 3 ratings, average rating 15'
-      expect(page).to have_content 'Favorite brewery: anonymous'
-      expect(page).to have_content 'Favorite style: Lager'
-      expect(page).to have_content 'anonymous 12'
-      expect(page).to have_content 'anonymous 19'
-      expect(page).to have_content 'anonymous 14'
+      expect(page).to have_content 'Has made 3 ratings with an average of 15'
+      expect(page).to have_content 'Favorite brewery anonymous'
+      expect(page).to have_content 'Favorite style Lager'
+      expect(page).to have_content '12 anonymous'
+      expect(page).to have_content '19 anonymous'
+      expect(page).to have_content '14 anonymous'
     end
 
     describe "when signed in" do
       before :each do
-        @user = User.first
-        create_beers_with_many_ratings({ user: @user, style: "Lager" }, 12, 19, 14)
         sign_in(username: "Pekka", password: "Foobar1")
       end
     
       it "ratings can be deleted" do
         expect{
-          page.first(:button, "Delete").click
+          page.first(:button, "delete").click
         }.to change{Rating.count}.by(-1)
       end
     end    

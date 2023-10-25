@@ -1,29 +1,50 @@
 require 'rails_helper'
 
-include Helpers
-
-describe "Rating" do
-  let!(:brewery) { FactoryBot.create :brewery, name:"Koff" }
-  let!(:beer1) { FactoryBot.create :beer, name:"iso 3", brewery:brewery }
-  let!(:beer2) { FactoryBot.create :beer, name:"Karhu", brewery:brewery }
-  let!(:user) { FactoryBot.create :user }
-
+describe "Places" do
   before :each do
-    sign_in(username: "Pekka", password: "Foobar1")
+    weather = OpenStruct.new temperature: 1, wind_speed: 1, wind_di: 'N', weather_icons: [1], weather_descriptions: [1]
+    allow(Weather).to receive(:current).with("kumpula").and_return(weather)
   end
 
-  it "when given, is registered to the beer and user who is signed in" do
-    visit new_rating_path
-    select('iso 3', from: 'rating[beer_id]')
-    fill_in('rating[score]', with: '15')
+  it "if one is returned by the API, it is shown at the page" do
+    allow(BeermappingApi).to receive(:places_in).with("kumpula").and_return(
+      [ Place.new( name:"Oljenkorsi", id: 1 ) ]
+    )
 
-    expect{
-      click_button "Create Rating"
-    }.to change{Rating.count}.from(0).to(1)
+    visit places_path
+    fill_in('city', with: 'kumpula')
+    click_button "Search"
 
-    expect(user.ratings.count).to eq(1)
-    expect(beer1.ratings.count).to eq(1)
-    expect(beer1.average_rating).to eq(15.0)
+    expect(page).to have_content "Oljenkorsi"
   end
 
+  it "if many is returned by the API, it is shown at the page" do
+    allow(BeermappingApi).to receive(:places_in).with("kumpula").and_return(
+      [ 
+        Place.new( name:"Oljenkorsi", id: 1 ),
+        Place.new( name:"Roskapankki", id: 2 ),
+        Place.new( name:"Pikkulintu", id: 3 )  
+      ]
+    )
+
+    visit places_path
+    fill_in('city', with: 'kumpula')
+    click_button "Search"
+
+    expect(page).to have_content "Oljenkorsi"
+    expect(page).to have_content "Roskapankki"
+    expect(page).to have_content "Pikkulintu"
+  end
+
+  it "if many is returned by the API, it is shown at the page" do
+    allow(BeermappingApi).to receive(:places_in).with("kumpula").and_return([])
+
+    visit places_path
+    fill_in('city', with: 'kumpula')
+    click_button "Search"
+
+    expect(page).to have_content "No locations in kumpula"
+  end
 end
+
+# rspec ./spec/features/places_spec.rb

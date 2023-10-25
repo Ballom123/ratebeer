@@ -1,4 +1,4 @@
-FactoryBot.define do  
+FactoryBot.define do
   factory :user do
     username { "Pekka" }
     password { "Foobar1" }
@@ -10,20 +10,19 @@ FactoryBot.define do
     year { 1900 }
   end
 
+  factory :style do
+    name { "anonymous" }
+  end
+
   factory :beer do
     name { "anonymous" }
-    style # style associated with beer
-    brewery # the brewery associated with beer is created with brewery factory
+    style
+    brewery # olueeseen liittyvä panimo luodaan brewery-tehtaalla
   end
 
   factory :rating do
     score { 10 }
-    beer # The beer associated with rating is created with beer factory
-    user # The user associated with rating is created with user factory
-  end
-
-  factory :style do
-    name { "tyyli" }
-    description { "Lorem ipsum" }
+    beer # reittaukseen liittyvä olut luodaan beer-tehtaalla
+    user # reittaukseen liittyvä user luodaan user-tehtaalla
   end
 end

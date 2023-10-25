@@ -7,10 +7,21 @@
   <%= form.submit "Search" %>
 <% end %>
 
-<% if @weather %>
-  <p>The current beer weather in</p>
+<% if @city %>
+  <h4>current beer weather in <%= @city %></h4>
+  <div>
+    <%= @weather.temperature %> Celsius
+  </div>
+  
+  <img src=<%= @weather.weather_icons.first %> alt=<%= @weather.weather_descriptions.first %>>
+
+  <div>
+    <strong>wind</strong> <%= @weather.wind_speed %>, direction <%= @weather.wind_di %>
+  </div>
+<% end %>
 
 <% if @places %>
+  <h4>drink here</h4>
   <table>
     <thead>
       <% Place.rendered_fields.each do |field| %>
@@ -20,11 +31,11 @@
     <% @places.each do |place| %>
       <tr>
         <% Place.rendered_fields.each do |field| %>
-          <% if field.to_s == "name" %>
+          <% if field == :name %>
             <td><%= link_to place.name, place_path(place.id) %></td>
           <% else %>
-            <td><%= place.send(field) %></td>
-          <% end %>  
+            <td> <%= place.send(field) %></td>
+          <% end %>
         <% end %>
       </tr>
     <% end %>
